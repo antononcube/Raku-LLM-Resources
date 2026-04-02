@@ -22,7 +22,10 @@ multi sub llm-resource-graph(
         Bool:D :echo(:progress(:$progress-reporting)) = False
         ) {
 
-    my %rules = LLM::Resources::Graphs.rules{$graph-name};
+    die 'Unknown graph name'
+    unless %LLM::Resources::Graphs::rules{$graph-name}:exists;
+
+    my %rules = %LLM::Resources::Graphs::rules{$graph-name};
 
     $llm-evaluator = llm-evaluator($llm-evaluator);
 

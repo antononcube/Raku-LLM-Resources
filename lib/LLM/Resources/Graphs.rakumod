@@ -80,7 +80,7 @@ my %text-summarize =
 #  https://github.com/antononcube/RakuForPrediction-blog/blob/main/Articles/Robust-code-generation-combining-grammars-and-LLMs.md
 #  https://raku-advent.blog/2025/12/06/day-6-robust-code-generation-combining-grammars-and-llms/
 
-my %code-generation-by-parallel-race =
+my %code-generate-by-parallel-race =
         dsl-grammar => {
             eval-function => sub ($spec, $lang = 'Raku') { ToDSLCode($spec, to => $lang, format => 'CODE') }
         },
@@ -155,7 +155,7 @@ my &llm-ml-workflow = -> $spec { my $res = llm-classify($spec, @mlLabels, reques
 # Specify a pipeline "separator" for the different programming languages:
 my %langSeparator = Python => "\n.", Raku => "\n.", R => "%>%\n", WL => "⟹\n";
 
-my %code-generation-by-fallback =
+my %code-generate-by-fallback =
         dsl-grammar => {
             eval-function => sub ($spec, $lang = 'Raku') {
                 my $res = ToDSLCode($spec, to => $lang, format => 'CODE');
@@ -198,6 +198,6 @@ my %code-generation-by-fallback =
 
 our %rules =
         :%text-summarize,
-        :%code-generation-by-parallel-race,
-        :%code-generation-by-fallback
+        :%code-generate-by-parallel-race,
+        :%code-generate-by-fallback
         ;
