@@ -10,6 +10,10 @@ use Data::Translators;
 use JSON::Fast;
 use Hash::Merge;
 
+#==========================================================
+# Comprehensive text summarization rules
+#==========================================================
+
 my %text-summarize =
         TypeOfInput => sub ($_) {
             "Determine the input type of\n\n$_.\n\nThe result should be one of: 'Text', 'URL', 'FilePath', or 'Other'."  ~
@@ -34,23 +38,24 @@ my %text-summarize =
         MindMap => sub ($IngestText) { llm-prompt('MermaidDiagram')($IngestText) },
 
         Report => { eval-function =>
-        sub ($Title, $Summary, $TopicsTable, $MindMap, $ThinkingHats) {
-            [
-                "# $Title",
-                '### *LLM summary report*',
-                '## Summary',
-                $Summary,
-                '## Topics',
-                to-html(
-                from-json($TopicsTable.subst(/ ^ '```json' | '```' $/):g),
+            sub ($Title, $Summary, $TopicsTable, $MindMap, $ThinkingHats) {
+                [
+                    "# $Title",
+                    '### *LLM summary report*',
+                    '## Summary',
+                    $Summary,
+                    '## Topics',
+                    to-html(
+                        from-json($TopicsTable.subst(/ ^ '```json' | '```' $/):g),
                         field-names => <theme content>,
-                        align => 'left'),
-                "## Mind map",
-                $MindMap,
-                '## Thinking hats',
-                $ThinkingHats.subst(/ ^ '```html' | '```' $/):g
-            ].join("\n\n")
-        }
+                        align => 'left'
+                    ),
+                    "## Mind map",
+                    $MindMap,
+                    '## Thinking hats',
+                    $ThinkingHats.subst(/ ^ '```html' | '```' $/):g
+                ].join("\n\n")
+            }
         }
         ;
 
