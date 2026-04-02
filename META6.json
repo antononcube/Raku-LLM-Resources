@@ -7,14 +7,17 @@
     ],
     "auth": "zef:antononcube",
     "depends": [
+        "DSL::Examples:ver<0.0.3+>",
+        "Data::Importers:ver<0.1.7+>",
+        "Data::Translators:ver<0.1.16+>",
+        "Graph:ver<0.0.30+>",
+        "Hash::Merge:ver<2.0.0>:api<2>",
         "JSON::Fast:ver<0.17+>",
         "LLM::Functions:ver<0.4.1+>",
         "LLM::Prompts:ver<0.2.5+>",
-        "Text::SubParsers:ver<0.1.2+>",
-        "Graph:ver<0.0.30+>",
-        "Hash::Merge:ver<2.0.0>:api<2>",
-        "Data::Translators",
-        "Data::Importers"
+        "ML::NLPTemplateEngine:ver<0.1.8+>",
+        "ML::FindTextualAnswer:ver<0.2.8+>",
+        "Text::SubParsers:ver<0.1.2+>"
     ],
     "build-depends": [],
     "provides": {
@@ -31,6 +34,8 @@
         "graph",
         "llm graph",
         "llm",
+        "text summarization",
+        "code generation",
         "web service",
         "web"
     ],
