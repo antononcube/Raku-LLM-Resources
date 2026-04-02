@@ -40,9 +40,7 @@ zef install https://github.com/antononcube/Raku-LLM-Resources.git
 
 ----
 
-## Usage examples
-
-### Comprehensive text summarization
+## Comprehensive text summarization
 
 Here is the usage message of CLI script `llm-text-summarize`:
 
@@ -65,4 +63,38 @@ Here is an example usage:
 
 ```
 llm-text-summarize some-large-text.txt -o summary.md --conf=ollama::gpt-oss:20b
+```
+
+---
+
+### Code generation
+
+```raku
+use LLM::Functions;
+use LLM::Resources;
+
+my $spec = q:to/END/;
+make a brand new recommender with the data @dsData;
+apply LSI functions IDF, None, Cosine; 
+recommend by profile for passengerSex:male, and passengerClass:1st;
+join across with @dsData on "id";
+echo the pipeline value;
+END
+
+my $llm-evaluator = llm-evaluator('Ollama', model => 'gemma3:4b');
+my $gBestCode = llm-resource-graph('code-generate-by-fallback', input => {:$spec, lang => 'Raku', :split}, :$llm-evaluator);
+```
+```
+# LLM::Graph(size => 4, nodes => code, dsl-grammar, llm-examples, workflow-name)
+```
+
+```raku
+$gBestCode.nodes<code><result>
+```
+```
+# ML::SparseMatrixRecommender.new(@dsData)
+# .apply-term-weight-functions('IDF', 'None', 'Cosine')
+# .recommend-by-profile({'passengerSex.male' => 1, 'passengerClass.1st' => 1})
+# .join-across(@dsData, on => "id")
+# .echo-value()
 ```
