@@ -1,0 +1,55 @@
+#!/usr/bin/env raku
+use v6.d;
+
+use LLM::Resources::Graphs;
+
+use LLM::Graph;
+use LLM::Functions;
+use LLM::Prompts;
+use Data::Importers;
+use Data::Translators;
+use JSON::Fast;
+
+my %rules = %LLM::Resources::Graphs::rules<text-summarize>;
+
+#-----------------------------------------------------------
+
+my %*SUB-MAIN-OPTS = :named-anywhere;
+
+#| LLM-based comprehensive text summarization.
+sub MAIN(
+        Str:D $input,                                 #= Text, file path, or a URL.
+        Str:D :title(:$with-title) = 'Whatever',      #= Title of the result document; if 'Whatever' or 'Auto' then it is derived from the text.
+        :conf(:llm(:$llm-conf)) = "chatgpt::gpt-5.1", #= LLM specification. (E.g. "gpt-5.2" or "openai::gpt-4.1-mini".)
+        Bool:D :$async = True,                        #= Whether to make the LLM calls interactively or not.
+        Bool:D :$progress = True,                     #= Whether to show progress or not.
+        Str:D :o(:$output) = '-',                     #= Output location; if empty or '-' then stdout is used.
+         ) {
+    my $conf = do if $llm-conf.contains('::') {
+        my ($provider, $model) = $llm-conf.split('::');
+        # Provider names are different than the model families.
+        $provider = do given $provider {
+            when 'openai' { 'chatgpt' }
+            when 'google' { 'gemini' }
+            default { $_ }
+        }
+        llm-configuration($provider, :$model)
+    } else {
+        llm-configuration('chatgpt', model => $llm-conf)
+    }
+
+    my $llm-evaluator = llm-evaluator($conf);
+
+    my $gCombinedSummary = llm-graph(%rules, :$llm-evaluator, :$async, :$progress);
+
+    $gCombinedSummary.eval({ '$_' => $input, :$with-title });
+
+    my $res = $gCombinedSummary.nodes<Report><result>.subst(/^ '```html' | '```' $/):g;
+
+    if $output.trim && $output.trim ne '-' {
+        spurt($output, $res)
+        #shell "open $output"
+    } else {
+        say $res
+    }
+}
