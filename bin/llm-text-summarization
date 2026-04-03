@@ -42,7 +42,9 @@ sub MAIN(
 
     my $gCombinedSummary = llm-graph(%rules, :$llm-evaluator, :$async, :$progress);
 
-    $gCombinedSummary.eval({ '$_' => $input, :$with-title });
+    my $with-title-local = !$with-title.trim || $with-title.lc ∈ <auto automatic whatever> ?? Whatever !! $with-title;
+
+    $gCombinedSummary.eval({ '$_' => $input, with-title => $with-title-local });
 
     my $res = $gCombinedSummary.nodes<Report><result>.subst(/^ '```html' | '```' $/):g;
 
