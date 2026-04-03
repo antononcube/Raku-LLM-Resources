@@ -51,8 +51,10 @@ my %text-summarization =
 
         MindMap => sub ($IngestText) { llm-prompt('MermaidDiagram')($IngestText) },
 
+        FindHiddenMessage => sub ($IngestText) { llm-prompt('FindHiddenMessage') ~ "\n\n$IngestText" },
+
         Report => { eval-function =>
-            sub ($Title, $Summary, $TopicsTable, $MindMap, $ThinkingHats) {
+            sub ($Title, $Summary, $TopicsTable, $MindMap, $ThinkingHats, $FindHiddenMessage) {
                 [
                     "# $Title",
                     '### *LLM summary report*',
@@ -67,7 +69,9 @@ my %text-summarization =
                     "## Mind map",
                     $MindMap,
                     '## Thinking hats',
-                    $ThinkingHats.subst(/ ^ '```html' | '```' $/):g
+                    $ThinkingHats.subst(/ ^ '```html' | '```' $/):g,
+                    '## Propaganda & hidden messages',
+                    $FindHiddenMessage.subst(/ ^^ '#' ** 2..6 /, { $0.Str ~ '#' }):g,
                 ].join("\n\n")
             }
         }
