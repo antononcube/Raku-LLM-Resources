@@ -145,10 +145,10 @@ my %code-generation-by-parallel-race =
 #  https://raku-advent.blog/2025/12/06/day-6-robust-code-generation-combining-grammars-and-llms/
 
 # Natural language labels to be understood by LLMs
-my @mlLabels = 'Classification', 'Latent Semantic Analysis', 'Quantile Regression', 'Recommendations';
+my @mlLabels = 'Classification', 'Latent Semantic Analysis', 'Quantile Regression', 'Recommendations', 'Data Reshaping';
 
 # Map natural language labels to workflow names in "DSL::Examples"
-my %toMonNames = @mlLabels Z=> <ClCon LSAMon QRMon SMRMon>;
+my %toMonNames = @mlLabels Z=> <ClCon LSAMon QRMon SMRMon DataReshaping>;
 
 # Change the result of &llm-classify result into workflow names
 my &llm-ml-workflow = -> $spec { my $res = llm-classify($spec, @mlLabels, request => 'which of these workflows characterizes it'); %toMonNames{$res} // $res };
