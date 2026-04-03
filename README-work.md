@@ -42,16 +42,16 @@ zef install https://github.com/antononcube/Raku-LLM-Resources.git
 
 ## Comprehensive text summarization
 
-Here is the usage message of CLI script `llm-text-summarize`:
+Here is the usage message of CLI script `llm-text-summarization`:
 
 ```shell
-llm-text-summarize --help
+llm-text-summarization --help
 ```
 
 Here is an example usage:
 
 ```
-llm-text-summarize some-large-text.txt -o summary.md --conf=ollama::gpt-oss:20b
+llm-text-summarization some-large-text.txt -o summary.md --conf=ollama::gpt-oss:20b
 ```
 
 ---
@@ -71,7 +71,7 @@ echo the pipeline value;
 END
 
 my $llm-evaluator = llm-evaluator('Ollama', model => 'gemma3:4b');
-my $gBestCode = llm-resource-graph('code-generate-by-fallback', input => {:$spec, lang => 'Raku', :split}, :$llm-evaluator);
+my $gBestCode = llm-resource-graph('code-generation-by-fallback', input => {:$spec, lang => 'Raku', :split}, :$llm-evaluator);
 ```
 
 ```raku

@@ -42,14 +42,14 @@ zef install https://github.com/antononcube/Raku-LLM-Resources.git
 
 ## Comprehensive text summarization
 
-Here is the usage message of CLI script `llm-text-summarize`:
+Here is the usage message of CLI script `llm-text-summarization`:
 
 ```shell
-llm-text-summarize --help
+llm-text-summarization --help
 ```
 ```
 # Usage:
-#   llm-text-summarize <input> [--title|--with-title=<Str>] [--conf|--llm|--llm-conf[=Any]] [--async] [--progress] [-o|--output=<Str>] -- LLM-based comprehensive text summarization.
+#   llm-text-summarization <input> [--title|--with-title=<Str>] [--conf|--llm|--llm-conf[=Any]] [--async] [--progress] [-o|--output=<Str>] -- LLM-based comprehensive text summarization.
 #   
 #     <input>                          Text, file path, or a URL.
 #     --title|--with-title=<Str>       Title of the result document; if 'Whatever' or 'Auto' then it is derived from the text. [default: 'Whatever']
@@ -62,7 +62,7 @@ llm-text-summarize --help
 Here is an example usage:
 
 ```
-llm-text-summarize some-large-text.txt -o summary.md --conf=ollama::gpt-oss:20b
+llm-text-summarization some-large-text.txt -o summary.md --conf=ollama::gpt-oss:20b
 ```
 
 ---
@@ -82,7 +82,7 @@ echo the pipeline value;
 END
 
 my $llm-evaluator = llm-evaluator('Ollama', model => 'gemma3:4b');
-my $gBestCode = llm-resource-graph('code-generate-by-fallback', input => {:$spec, lang => 'Raku', :split}, :$llm-evaluator);
+my $gBestCode = llm-resource-graph('code-generation-by-fallback', input => {:$spec, lang => 'Raku', :split}, :$llm-evaluator);
 ```
 ```
 # LLM::Graph(size => 4, nodes => code, dsl-grammar, llm-examples, workflow-name)
@@ -95,6 +95,6 @@ $gBestCode.nodes<code><result>
 # ML::SparseMatrixRecommender.new(@dsData)
 # .apply-term-weight-functions('IDF', 'None', 'Cosine')
 # .recommend-by-profile({'passengerSex.male' => 1, 'passengerClass.1st' => 1})
-# .join-across(@dsData, on => "id")
+# .join-across(@dsData, on => 'id')
 # .echo-value()
 ```

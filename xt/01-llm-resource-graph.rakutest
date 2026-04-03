@@ -18,6 +18,6 @@ join across with @dsData on "id";
 echo the pipeline value;
 END
 
-ok llm-resource-graph('code-generate-by-fallback', input => {:$spec, lang => 'Raku', :split}, :$llm-evaluator);
+ok llm-resource-graph('code-generation-by-fallback', input => {:$spec, lang => 'Raku', :split}, :$llm-evaluator);
 
 done-testing;

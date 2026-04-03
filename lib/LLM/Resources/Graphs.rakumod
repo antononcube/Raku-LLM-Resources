@@ -28,7 +28,7 @@ use Hash::Merge;
 #  https://github.com/antononcube/RakuForPrediction-blog/blob/main/Articles/Agentic-AI-for-text-summarization.md
 #  https://rakuforprediction.wordpress.com/2025/09/02/agentic-ai-for-text-summarization/
 
-my %text-summarize =
+my %text-summarization =
         TypeOfInput => sub ($_) {
             "Determine the input type of\n\n$_.\n\nThe result should be one of: 'Text', 'URL', 'FilePath', or 'Other'."  ~
                     llm-prompt('NothingElse')('single string')
@@ -80,7 +80,7 @@ my %text-summarize =
 #  https://github.com/antononcube/RakuForPrediction-blog/blob/main/Articles/Robust-code-generation-combining-grammars-and-LLMs.md
 #  https://raku-advent.blog/2025/12/06/day-6-robust-code-generation-combining-grammars-and-llms/
 
-my %code-generate-by-parallel-race =
+my %code-generation-by-parallel-race =
         dsl-grammar => {
             eval-function => sub ($spec, $lang = 'Raku') { ToDSLCode($spec, to => $lang, format => 'CODE') }
         },
@@ -155,7 +155,7 @@ my &llm-ml-workflow = -> $spec { my $res = llm-classify($spec, @mlLabels, reques
 # Specify a pipeline "separator" for the different programming languages:
 my %langSeparator = Python => "\n.", Raku => "\n.", R => "%>%\n", WL => "⟹\n";
 
-my %code-generate-by-fallback =
+my %code-generation-by-fallback =
         dsl-grammar => {
             eval-function => sub ($spec, $lang = 'Raku') {
                 my $res = ToDSLCode($spec, to => $lang, format => 'CODE');
@@ -197,7 +197,7 @@ my %code-generate-by-fallback =
 #==========================================================
 
 our %rules =
-        :%text-summarize,
-        :%code-generate-by-parallel-race,
-        :%code-generate-by-fallback
+        :%text-summarization,
+        :%code-generation-by-parallel-race,
+        :%code-generation-by-fallback
         ;

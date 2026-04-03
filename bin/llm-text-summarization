@@ -10,7 +10,7 @@ use Data::Importers;
 use Data::Translators;
 use JSON::Fast;
 
-my %rules = %LLM::Resources::Graphs::rules<text-summarize>;
+my %rules = %LLM::Resources::Graphs::rules<text-summarization>;
 
 #-----------------------------------------------------------
 
