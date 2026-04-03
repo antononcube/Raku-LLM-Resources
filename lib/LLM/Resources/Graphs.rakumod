@@ -71,7 +71,7 @@ my %text-summarization =
                     '## Thinking hats',
                     $ThinkingHats.subst(/ ^ '```html' | '```' $/):g,
                     '## Propaganda & hidden messages',
-                    $FindHiddenMessage.subst(/ ^^ '#' ** 2..6 /, { $0.Str ~ '#' }):g,
+                    $FindHiddenMessage.subst(/ ^^ ('#' ** 2..6) /, { $0.Str ~ '#' }):g,
                 ].join("\n\n")
             }
         }
