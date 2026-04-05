@@ -36,9 +36,10 @@ my %text-summarization =
 
         IngestText =>  { eval-function => sub ($TypeOfInput, $_) { $TypeOfInput ~~ / URL | FilePath/ ?? data-import($_) !! $_} },
 
+        # Note that this uses the default LLM evaluator
         Title => {
             eval-function => sub ($IngestText, $with-title = Whatever) {
-                $with-title ~~ Str:D
+                $with-title ~~ Str:D && $with-title.trim
                         ?? $with-title
                         !! llm-synthesize([llm-prompt("TitleSuggest")($IngestText, 'article'), "Short title with less that 6 words"]) },
         },
@@ -67,7 +68,7 @@ my %text-summarization =
                         align => 'left'
                     ),
                     "## Mind map",
-                    $MindMap,
+                    $MindMap ~~ / ^ '```mermaid' | '```' $/ ?? $MindMap !! "```mermaid\n$MindMap\n```",
                     '## Thinking hats',
                     $ThinkingHats.subst(/ ^ '```html' | '```' $/):g,
                     '## Propaganda & hidden messages',
