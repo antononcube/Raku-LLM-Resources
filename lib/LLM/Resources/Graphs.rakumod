@@ -109,10 +109,10 @@ my @mlLabels = 'Classification', 'Latent Semantic Analysis', 'Quantile Regressio
 my %toMonNames = @mlLabels Z=> <ClCon LSAMon QRMon SMRMon DataReshaping>;
 
 # Change the result of &llm-classify result into workflow names
-my &llm-ml-workflow = -> $spec {
+my &llm-ml-workflow = sub ($spec) {
     my $res = llm-classify($spec, @mlLabels, request => 'which of these workflows characterizes it', llm-evaluator => get-default-llm-evaluator);
     %toMonNames{$res} // $res
-};
+}
 
 # Example invocation
 #&llm-ml-workflow($spec);
@@ -137,8 +137,7 @@ my %code-generation-by-fallback =
 
         # Note that this uses the default LLM evaluator
         llm-examples => {
-            llm-function =>
-            sub ($spec, $workflow-name, $lang = 'Raku', $split = False) {
+            llm-function => sub ($spec, $workflow-name, $lang = 'Raku', $split = False) {
                 my &llm-pipeline-segment = llm-example-function(dsl-examples(){$lang}{$workflow-name}, llm-evaluator => get-default-llm-evaluator);
                 return do if $split {
                     my @commands = $spec.lines;
