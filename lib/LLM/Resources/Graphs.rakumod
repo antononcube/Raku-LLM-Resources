@@ -90,6 +90,7 @@ my %code-generation-by-parallel-race =
             eval-function => sub ($spec, $lang = 'Raku') { ToDSLCode($spec, to => $lang, format => 'CODE') }
         },
 
+        # Note that this uses the default LLM evaluator
         llm-examples => {
             llm-function =>
             sub ($spec, $lang = 'Raku', $split = False) {
@@ -105,6 +106,7 @@ my %code-generation-by-parallel-race =
             },
         },
 
+        # Note that this uses the default LLM evaluator
         nlp-template-engine => {
             llm-function => sub ($spec, $lang = 'Raku') { concretize($spec, :$lang) }
         },
@@ -175,6 +177,7 @@ my %code-generation-by-fallback =
             llm-function => sub ($spec) { &llm-ml-workflow($spec) }
         },
 
+        # Note that this uses the default LLM evaluator
         llm-examples => {
             llm-function =>
             sub ($spec, $workflow-name, $lang = 'Raku', $split = False) {
