@@ -132,7 +132,7 @@ my %code-generation-by-fallback =
         },
 
         workflow-name => {
-            llm-function => sub ($spec) { &llm-ml-workflow($spec) }
+            llm-function => sub ($spec) { my $class = &llm-ml-workflow($spec); $class ~~ Positional:D ?? $class.head !! $class }
         },
 
         # Note that this uses the default LLM evaluator
@@ -170,7 +170,7 @@ my %code-generation-by-parallel-race =
         },
 
         workflow-name => {
-            llm-function => sub ($spec) { &llm-ml-workflow($spec) }
+            llm-function => sub ($spec) { my $class = &llm-ml-workflow($spec); $class ~~ Positional:D ?? $class.head !! $class }
         },
 
         # Note that this uses the default LLM evaluator
