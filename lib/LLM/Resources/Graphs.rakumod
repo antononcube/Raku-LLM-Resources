@@ -96,68 +96,6 @@ my %text-summarization =
         ;
 
 #==========================================================
-# Code generation: Parallel race
-#==========================================================
-# See:
-#  https://github.com/antononcube/RakuForPrediction-blog/blob/main/Articles/Robust-code-generation-combining-grammars-and-LLMs.md
-#  https://raku-advent.blog/2025/12/06/day-6-robust-code-generation-combining-grammars-and-llms/
-
-my %code-generation-by-parallel-race =
-        dsl-grammar => {
-            eval-function => sub ($spec, $lang = 'Raku') { ToDSLCode($spec, to => $lang, format => 'CODE') }
-        },
-
-        # Note that this uses the default LLM evaluator
-        llm-examples => {
-            llm-function =>
-            sub ($spec, $lang = 'Raku', $split = False) {
-                my &llm-pipeline-segment = llm-example-function(dsl-examples(){$lang}<SMRMon>, llm-evaluator => get-default-llm-evaluator);
-                return do if $split {
-                    note 'with spec splitting...';
-                    my @commands = $spec.lines;
-                    @commands.map({ .&llm-pipeline-segment }).map({ .subst(/:i Output \h* ':'?/, :g).trim }).join("\n.")
-                } else {
-                    note 'no spec splitting...';
-                    &llm-pipeline-segment($spec).subst(";\n", "\n."):g
-                }
-            },
-        },
-
-        # Note that this uses the default LLM evaluator
-        nlp-template-engine => {
-            llm-function => sub ($spec, $lang = 'Raku') { concretize($spec, :$lang, llm-evaluator => get-default-llm-evaluator) }
-        },
-
-        judge => sub ($spec, $lang, $dsl-grammar, $llm-examples, $nlp-template-engine) {
-            [
-                "Choose the generated code that most fully adheres to the spec:\n",
-                $spec,
-                "\nfrom the following $lang generation results:\n\n",
-                "1) DSL-grammar:\n$dsl-grammar\n",
-                "2) LLM-examples:\n$llm-examples\n",
-                "3) NLP-template-engine:\n$nlp-template-engine\n",
-                "and copy it:"
-            ].join("\n\n")
-        },
-
-        report => {
-            eval-function => sub ($spec, $lang, $dsl-grammar, $llm-examples, $nlp-template-engine, $judge) {
-                [
-                    '# Best generated code',
-                    "Three $lang code generations were submitted for the spec:",
-                    '```text',
-                    $spec,
-                    '```',
-                    'Here are the results:',
-                    to-html( ['dsl-grammar', 'llm-examples', 'nlp-template-engine'].map({ [ name => $_, code => ::('$' ~ $_)] })».Hash.Array, field-names => <name code> ).subst("\n", '<br/>'):g,
-                    '## Judgement',
-                    $judge.contains('```') ?? $judge !! "```$lang\n" ~ $judge ~ "\n```"
-                ].join("\n\n")
-            }
-        }
-        ;
-
-#==========================================================
 # Code generation: Fallback
 #==========================================================
 # See:
@@ -217,8 +155,73 @@ my %code-generation-by-fallback =
                 $dsl-grammar ~~ Str:D && $dsl-grammar.trim ?? $dsl-grammar !! $llm-examples
             }
         }
-        ;
+;
 
+#==========================================================
+# Code generation: Parallel race
+#==========================================================
+# See:
+#  https://github.com/antononcube/RakuForPrediction-blog/blob/main/Articles/Robust-code-generation-combining-grammars-and-LLMs.md
+#  https://raku-advent.blog/2025/12/06/day-6-robust-code-generation-combining-grammars-and-llms/
+
+my %code-generation-by-parallel-race =
+        dsl-grammar => {
+            eval-function => sub ($spec, $lang = 'Raku') { ToDSLCode($spec, to => $lang, format => 'CODE') }
+        },
+
+        workflow-name => {
+            llm-function => sub ($spec) { &llm-ml-workflow($spec) }
+        },
+
+        # Note that this uses the default LLM evaluator
+        llm-examples => {
+            llm-function =>
+                sub ($spec, $workflow-wname, $lang = 'Raku', $split = False) {
+                    my &llm-pipeline-segment = llm-example-function(dsl-examples(){$lang}{$workflow-wname}, llm-evaluator => get-default-llm-evaluator);
+                    return do if $split {
+                        note 'with spec splitting...';
+                        my @commands = $spec.lines;
+                        @commands.map({ .&llm-pipeline-segment }).map({ .subst(/:i Output \h* ':'?/, :g).trim }).join("\n.")
+                    } else {
+                        note 'no spec splitting...';
+                        &llm-pipeline-segment($spec).subst(";\n", "\n."):g
+                    }
+                },
+        },
+
+        # Note that this uses the default LLM evaluator
+        nlp-template-engine => {
+            llm-function => sub ($spec, $lang = 'Raku') { concretize($spec, :$lang, llm-evaluator => get-default-llm-evaluator) }
+        },
+
+        judge => sub ($spec, $lang, $dsl-grammar, $llm-examples, $nlp-template-engine) {
+            [
+                "Choose the generated code that most fully adheres to the spec:\n",
+                $spec,
+                "\nfrom the following $lang generation results:\n\n",
+                "1) DSL-grammar:\n$dsl-grammar\n",
+                "2) LLM-examples:\n$llm-examples\n",
+                "3) NLP-template-engine:\n$nlp-template-engine\n",
+                "and copy it:"
+            ].join("\n\n")
+        },
+
+        report => {
+            eval-function => sub ($spec, $lang, $dsl-grammar, $llm-examples, $nlp-template-engine, $judge) {
+                [
+                    '# Best generated code',
+                    "Three $lang code generations were submitted for the spec:",
+                    '```text',
+                    $spec,
+                    '```',
+                    'Here are the results:',
+                    to-html( ['dsl-grammar', 'llm-examples', 'nlp-template-engine'].map({ [ name => $_, code => ::('$' ~ $_)] })».Hash.Array, field-names => <name code> ).subst("\n", '<br/>'):g,
+                    '## Judgement',
+                    $judge.contains('```') ?? $judge !! "```$lang\n" ~ $judge ~ "\n```"
+                ].join("\n\n")
+            }
+        }
+        ;
 
 #==========================================================
 # All rules hashmap
@@ -226,6 +229,6 @@ my %code-generation-by-fallback =
 
 our %rules =
         :%text-summarization,
+        :%code-generation-by-fallback,
         :%code-generation-by-parallel-race,
-        :%code-generation-by-fallback
         ;
