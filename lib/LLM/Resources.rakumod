@@ -83,9 +83,16 @@ multi sub llm-resource-graph(
 
     $llm-evaluator = llm-evaluator($llm-evaluator);
 
+    # Set the default evaluator to be user-specified one
+    my $llm-evaluator-current = LLM::Resources::Graphs::get-default-llm-evaluator();
+    LLM::Resources::Graphs::set-default-llm-evaluator($llm-evaluator);
+
     my $llm-graph = llm-graph(%rules, :$llm-evaluator, :$async, :$progress-reporting);
 
     $llm-graph.eval(%input);
+
+    # Restore the default evaluator
+    LLM::Resources::Graphs::set-default-llm-evaluator($llm-evaluator-current);
 
     # Maybe just result nodes? Or take return type argument.
     return $llm-graph;

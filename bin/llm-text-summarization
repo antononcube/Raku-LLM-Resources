@@ -40,12 +40,20 @@ sub MAIN(
 
     my $llm-evaluator = llm-evaluator($conf);
 
+    # Set the default evaluator to be user-specified one
+    my $llm-evaluator-current = LLM::Resources::Graphs::get-default-llm-evaluator();
+    LLM::Resources::Graphs::set-default-llm-evaluator($llm-evaluator);
+
     my $gCombinedSummary = llm-graph(%rules, :$llm-evaluator, :$async, :$progress);
 
     my $with-title-local = !$with-title.trim || $with-title.lc ∈ <auto automatic whatever> ?? Whatever !! $with-title;
 
     $gCombinedSummary.eval({ '$_' => $input, with-title => $with-title-local });
 
+    # Restore the default evaluator
+    LLM::Resources::Graphs::set-default-llm-evaluator($llm-evaluator-current);
+
+    # Result processing
     my $res = $gCombinedSummary.nodes<Report><result>.subst(/^ '```html' | '```' $/):g;
 
     if $output.trim && $output.trim ne '-' {

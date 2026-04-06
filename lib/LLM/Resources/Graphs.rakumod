@@ -22,6 +22,19 @@ use JSON::Fast;
 use Hash::Merge;
 
 #==========================================================
+# Default LLM configuration and evaluator
+#==========================================================
+
+my $llm-evaluator = llm-evaluator(Whatever);
+our sub set-default-llm-evaluator($obj) {
+    $llm-evaluator = llm-evaluator($obj)
+}
+
+our sub get-default-llm-evaluator() {
+    $llm-evaluator.clone
+}
+
+#==========================================================
 # Comprehensive text summarization rules
 #==========================================================
 # See:
@@ -41,7 +54,11 @@ my %text-summarization =
             eval-function => sub ($IngestText, $with-title = Whatever) {
                 $with-title ~~ Str:D && $with-title.trim
                         ?? $with-title
-                        !! llm-synthesize([llm-prompt("TitleSuggest")($IngestText, 'article'), "Short title with less that 6 words"]) },
+                        !! llm-synthesize([
+                                llm-prompt("TitleSuggest")($IngestText, 'article'),
+                                "Short title with less that 6 words"
+                            ], llm-evaluator => get-default-llm-evaluator)
+            },
         },
 
         Summary => sub ($IngestText) { llm-prompt("Summarize")() ~ "\n\n$IngestText" },
@@ -94,7 +111,7 @@ my %code-generation-by-parallel-race =
         llm-examples => {
             llm-function =>
             sub ($spec, $lang = 'Raku', $split = False) {
-                my &llm-pipeline-segment = llm-example-function(dsl-examples(){$lang}<SMRMon>);
+                my &llm-pipeline-segment = llm-example-function(dsl-examples(){$lang}<SMRMon>, llm-evaluator => get-default-llm-evaluator);
                 return do if $split {
                     note 'with spec splitting...';
                     my @commands = $spec.lines;
@@ -108,7 +125,7 @@ my %code-generation-by-parallel-race =
 
         # Note that this uses the default LLM evaluator
         nlp-template-engine => {
-            llm-function => sub ($spec, $lang = 'Raku') { concretize($spec, :$lang) }
+            llm-function => sub ($spec, $lang = 'Raku') { concretize($spec, :$lang, llm-evaluator => get-default-llm-evaluator) }
         },
 
         judge => sub ($spec, $lang, $dsl-grammar, $llm-examples, $nlp-template-engine) {
@@ -154,7 +171,10 @@ my @mlLabels = 'Classification', 'Latent Semantic Analysis', 'Quantile Regressio
 my %toMonNames = @mlLabels Z=> <ClCon LSAMon QRMon SMRMon DataReshaping>;
 
 # Change the result of &llm-classify result into workflow names
-my &llm-ml-workflow = -> $spec { my $res = llm-classify($spec, @mlLabels, request => 'which of these workflows characterizes it'); %toMonNames{$res} // $res };
+my &llm-ml-workflow = -> $spec {
+    my $res = llm-classify($spec, @mlLabels, request => 'which of these workflows characterizes it', llm-evaluator => get-default-llm-evaluator);
+    %toMonNames{$res} // $res
+};
 
 # Example invocation
 #&llm-ml-workflow($spec);
@@ -181,7 +201,7 @@ my %code-generation-by-fallback =
         llm-examples => {
             llm-function =>
             sub ($spec, $workflow-name, $lang = 'Raku', $split = False) {
-                my &llm-pipeline-segment = llm-example-function(dsl-examples(){$lang}{$workflow-name});
+                my &llm-pipeline-segment = llm-example-function(dsl-examples(){$lang}{$workflow-name}, llm-evaluator => get-default-llm-evaluator);
                 return do if $split {
                     my @commands = $spec.lines;
                     @commands.map({ .&llm-pipeline-segment }).map({ .subst(/:i Output \h* ':'?/, :g).trim }).join(%langSeparator{$lang})
