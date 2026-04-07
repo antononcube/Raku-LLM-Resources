@@ -69,7 +69,8 @@ use LLM::Resources;
 
 my $spec = q:to/END/;
 new recommender object;
-use @dsData;
+load dataset @dsData;
+make document term matrix;
 apply LSI functions IDF, None, Cosine; 
 recommend by profile for passengerSex:male, and passengerClass:1st;
 join across with @dsData on "id";

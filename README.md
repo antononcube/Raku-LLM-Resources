@@ -80,7 +80,8 @@ use LLM::Resources;
 
 my $spec = q:to/END/;
 new recommender object;
-use @dsData;
+load dataset @dsData;
+make document term matrix;
 apply LSI functions IDF, None, Cosine; 
 recommend by profile for passengerSex:male, and passengerClass:1st;
 join across with @dsData on "id";
@@ -98,7 +99,13 @@ my $gBestCode = llm-resource-graph('code-generation-by-fallback', input => {:$sp
 $gBestCode.nodes<code><result>
 ```
 ```
-# my $obj = ML::SparseMatrixRecommender.new@dsData.apply-term-weight-functions(global-weight-func => "IDF", local-weight-func => "None", normalizer-func => "Cosine").recommend-by-profile(["passengerSex:male", "passengerClass:1st"]).join-across(@dsData, on => "id" ).echo-value()
+# ML::SparseMatrixRecommender.new
+# .load-dataset(dsData)
+# .make-term-document-matrix()
+# .apply-term-weight-functions(global-weight-function => 'IDF', local-weight-function => 'None', normalizer-function => 'Cosine')
+# .recommend-by-profile({'passengerSex': 'male', 'passengerClass': '1st'})
+# .join-across(@dsData, on => "id")
+# .echo-value()
 ```
 
 -----
