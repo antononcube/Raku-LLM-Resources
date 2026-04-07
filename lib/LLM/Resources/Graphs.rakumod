@@ -25,7 +25,7 @@ use Hash::Merge;
 # Default LLM configuration and evaluator
 #==========================================================
 
-my $llm-evaluator = llm-evaluator(Whatever);
+our $llm-evaluator = llm-evaluator(Whatever);
 our sub set-default-llm-evaluator($obj) {
     $llm-evaluator = llm-evaluator($obj)
 }
@@ -109,9 +109,8 @@ my @mlLabels = 'Classification', 'Latent Semantic Analysis', 'Quantile Regressio
 my %toMonNames = @mlLabels Z=> <ClCon LSAMon QRMon SMRMon DataReshaping>;
 
 # Change the result of &llm-classify result into workflow names
-my &llm-ml-workflow = sub ($spec) {
-    my $res = llm-classify($spec, @mlLabels, request => 'which of these workflows characterizes it', llm-evaluator => get-default-llm-evaluator);
-    %toMonNames{$res} // $res
+sub llm-ml-workflow($spec, :$llm-evaluator) {
+    my $res = llm-classify($spec, @mlLabels, request => 'which of these workflows characterizes it', :$llm-evaluator);
 }
 
 # Example invocation
@@ -132,12 +131,15 @@ my %code-generation-by-fallback =
         },
 
         workflow-name => {
-            llm-function => sub ($spec) { my $class = &llm-ml-workflow($spec); $class ~~ Positional:D ?? $class.head !! $class }
+            llm-function => sub ($spec) {
+                my $class = llm-ml-workflow($spec, llm-evaluator => get-default-llm-evaluator);
+                $class ~~ Positional:D ?? $class.head !! $class
+            }
         },
 
-        # Note that this uses the default LLM evaluator
         llm-examples => {
-            llm-function => sub ($spec, $workflow-name, $lang = 'Raku', $split = False) {
+            llm-function => sub ($spec, $workflow-name is copy, $lang = 'Raku', $split = False) {
+                $workflow-name = %toMonNames{$workflow-name} // $workflow-name;
                 my &llm-pipeline-segment = llm-example-function(dsl-examples(){$lang}{$workflow-name}, llm-evaluator => get-default-llm-evaluator);
                 return do if $split {
                     my @commands = $spec.lines;
@@ -169,14 +171,17 @@ my %code-generation-by-parallel-race =
         },
 
         workflow-name => {
-            llm-function => sub ($spec) { my $class = &llm-ml-workflow($spec); $class ~~ Positional:D ?? $class.head !! $class }
+            llm-function => sub ($spec) {
+                my $class = llm-ml-workflow($spec, llm-evaluator => get-default-llm-evaluator);
+                $class ~~ Positional:D ?? $class.head !! $class
+            }
         },
 
-        # Note that this uses the default LLM evaluator
         llm-examples => {
             llm-function =>
-                sub ($spec, $workflow-wname, $lang = 'Raku', $split = False) {
-                    my &llm-pipeline-segment = llm-example-function(dsl-examples(){$lang}{$workflow-wname}, llm-evaluator => get-default-llm-evaluator);
+                sub ($spec, $workflow-name is copy, $lang = 'Raku', $split = False) {
+                    $workflow-name = %toMonNames{$workflow-name} // $workflow-name;
+                    my &llm-pipeline-segment = llm-example-function(dsl-examples(){$lang}{$workflow-name}, llm-evaluator => get-default-llm-evaluator);
                     return do if $split {
                         note 'with spec splitting...';
                         my @commands = $spec.lines;
@@ -188,9 +193,10 @@ my %code-generation-by-parallel-race =
                 },
         },
 
-        # Note that this uses the default LLM evaluator
         nlp-template-engine => {
-            llm-function => sub ($spec, $lang = 'Raku') { concretize($spec, :$lang, llm-evaluator => get-default-llm-evaluator) }
+            llm-function => sub ($spec, $workflow-name, $lang = 'Raku') {
+                concretize($spec, template => $workflow-name, :$lang, llm-evaluator => get-default-llm-evaluator)
+            }
         },
 
         judge => sub ($spec, $lang, $dsl-grammar, $llm-examples, $nlp-template-engine) {
