@@ -2,6 +2,11 @@
 
 Raku package with different subs and CLI scripts for specific but repeatable LLM-based workflows.
 
+For usage examples see:
+- The sections below
+- Jupyter notebook ["Basic-usage.ipynb"](https://github.com/antononcube/Raku-LLM-Resources/blob/main/docs/Basic-usage.ipynb)
+- The script ["Basic-usage.raku"](https://github.com/antononcube/Raku-LLM-Resources/blob/main/examples/Basic-usage.raku)
+
 ----
 
 ## Installation
@@ -63,7 +68,8 @@ use LLM::Functions;
 use LLM::Resources;
 
 my $spec = q:to/END/;
-make a brand new recommender with the data @dsData;
+new recommender object;
+use @dsData;
 apply LSI functions IDF, None, Cosine; 
 recommend by profile for passengerSex:male, and passengerClass:1st;
 join across with @dsData on "id";
@@ -77,3 +83,21 @@ my $gBestCode = llm-resource-graph('code-generation-by-fallback', input => {:$sp
 ```raku
 $gBestCode.nodes<code><result>
 ```
+
+-----
+
+## References
+
+[AA1] Anton Antonov,
+["Agentic-AI for text summarization"](https://rakuforprediction.wordpress.com/2025/09/02/agentic-ai-for-text-summarization/),
+(2025),
+[RakuForPrediction at WordPress](https://rakuforprediction.wordpress.com). 
+([GitHub](https://github.com/antononcube/RakuForPrediction-blog/blob/main/Articles/Agentic-AI-for-text-summarization.md).)
+
+[AA2] Anton Antonov,
+["Day 6 – Robust code generation combining grammars and LLMs"](https://raku-advent.blog/2025/12/06/day-6-robust-code-generation-combining-grammars-and-llms/),
+(2025),
+[Raku Advent Calendar at WordPress](https://raku-advent.blog).
+([GitHub](https://github.com/antononcube/RakuForPrediction-blog/blob/main/Articles/Robust-code-generation-combining-grammars-and-LLMs.md), 
+[Wolfram Community](https://community.wolfram.com/groups/-/m/t/3588794).)
+
