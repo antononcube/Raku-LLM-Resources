@@ -1,8 +1,19 @@
 use v6.d;
 
+#==========================================================
+# Export
+#==========================================================
+
+sub EXPORT {
+    use LLM::Resources::DSLTranslation;
+    Map.new:
+            '&llm-dsl-translation' => &LLM::Resources::DSLTranslation::llm-dsl-translation
+}
+
 unit module LLM::Resources;
 
 use LLM::Resources::Graphs;
+use LLM::Resources::DSLTranslation;
 use LLM::Graph;
 use LLM::Functions;
 use LLM::Prompts;
