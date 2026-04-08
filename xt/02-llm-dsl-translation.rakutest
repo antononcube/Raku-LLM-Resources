@@ -1,0 +1,54 @@
+#!/usr/bin/env raku
+use v6.d;
+use Test;
+use LLM::Resources;
+use LLM::Resources::DSLTranslation;
+use LLM::Functions;
+
+plan *;
+
+my $llm-evaluator = llm-evaluator('Ollama', model => 'gemma3:4b');
+
+use LLM::Resources;
+
+subtest {
+    my $spec = q:to/END/;
+    use dfTitanic;
+    filter by sex is male;
+    show counts
+    END
+
+    ok llm-dsl-translation($spec, lang => 'Raku', :$llm-evaluator), 'can invoke';
+
+    my $res = llm-dsl-translation($spec, lang => 'Raku', :$llm-evaluator);
+
+    like $res, / .* '$obj' \h+ '=' \h+ 'dfTitanic' .* /, 'expected first line, no hints and np separator';
+
+    $res = llm-dsl-translation($spec, sep => WhateverCode, lang => 'Raku', :$llm-evaluator);
+
+    like $res, / .* '$obj' \h+ '=' \h+ 'dfTitanic' .* /, 'expected first line, no hints with separator';
+
+}, 'data wrangling spec to Raku';
+
+subtest {
+    my $spec = q:to/END/;
+    use the corpus aAbstrats;
+    make the document-term matrix;
+    apply LSI functions;
+    extract 23 topics using the SVD method;
+    show topics table;
+    END
+
+
+    my $res = llm-dsl-translation($spec, lang => 'WL', :$llm-evaluator);
+
+    like $res, / .* \"NumberOfTopics\" \h* '->' \h* 23 .* /, 'expected topic parameter, no hints and no separator';
+    like $res, / .* Method \h* '->' \h* \"SVD\" .* /, 'expected topic parameter, no hints and no separator';
+
+    $res = llm-dsl-translation($spec, sep => WhateverCode, lang => 'WL', :$llm-evaluator);
+
+    like $res, / .* \"NumberOfTopics\" \h* '->' \h* 23 .* /, 'expected topic parameter, no hints and with separator';
+
+}, 'latent semantic analysis to WL';
+
+done-testing;
