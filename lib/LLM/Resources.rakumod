@@ -13,7 +13,6 @@ sub EXPORT {
 unit module LLM::Resources;
 
 use LLM::Resources::Graphs;
-use LLM::Resources::DSLTranslation;
 use LLM::Graph;
 use LLM::Functions;
 use LLM::Prompts;
