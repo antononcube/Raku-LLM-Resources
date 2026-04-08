@@ -23,6 +23,7 @@
     "build-depends": [],
     "provides": {
         "LLM::Resources": "lib/LLM/Resources.rakumod",
+        "LLM::Resources::DSLTranslation": "lib/LLM/Resources/DSLTranslation.rakumod",
         "LLM::Resources::Graphs": "lib/LLM/Resources/Graphs.rakumod"
     },
     "license": "Artistic-2.0",
