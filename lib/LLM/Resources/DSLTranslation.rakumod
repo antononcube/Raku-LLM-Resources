@@ -33,21 +33,21 @@ my %langSeparator = Python => "\n.", Raku => "\n.", R => "%>%\n", WL => "⟹\n";
 
 #| Translation of input from one language to another using LLM-based methods.
 our proto sub llm-dsl-translation(
-        $input,                               #= String or a list of strings to translate.
-        :t(:to(:to-lang(:$lang))) = Whatever, #= Language to translate to.
-        :w(:$workflow-spec) = Whatever,       #= Workflow spec; string or Whatever.
-        :m(:$method) = Whatever,              #= Method, one 'dsl-examples', 'nlp-template-engine' or Whatever.
-        :e(:$llm-evaluator) = Whatever,       #= LLM-evaluator spec.
-        :$sep = Whatever,                     #= Separator(s) to split the input with; string or regex.
+        $input,                                    #= String or a list of strings to translate.
+        :t(:to(:to-lang(:$lang))) = Whatever,      #= Language to translate to.
+        :w(:workflow(:$workflow-spec)) = Whatever, #= Workflow spec; string or Whatever.
+        :m(:$method) = Whatever,                   #= Method, one 'dsl-examples', 'nlp-template-engine' or Whatever.
+        :e(:$llm-evaluator) = Whatever,            #= LLM-evaluator spec.
+        :split-with(:split(:$sep)) = Whatever,     #= Separator(s) to split the input with; string or regex.
                               ) is export {*}
 
 multi sub llm-dsl-translation(
         $input,
         :t(:to(:to-lang(:$lang))) is copy = Whatever,
-        :w(:$workflow-spec) is copy = Whatever,
+        :w(:workflow(:$workflow-spec)) is copy = Whatever,
         :m(:$method) is copy = Whatever,
         :e(:$llm-evaluator) is copy = Whatever,
-        :$sep is copy = Whatever,
+        :split-with(:split(:$sep)) is copy = Whatever,
                               ) {
 
     # Process method
@@ -74,6 +74,9 @@ multi sub llm-dsl-translation(
         my $class = llm-ml-workflow($input, :$llm-evaluator);
         $workflow-spec = $class ~~ Positional:D ?? $class.head !! $class
     }
+
+    # Process LLM lang
+    if $lang.isa(Whatever) { $lang = 'Raku' }
 
     # Process LLM evaluator
     $llm-evaluator = llm-evaluator($llm-evaluator);
