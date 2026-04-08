@@ -10,11 +10,11 @@ For usage examples see:
 There are several options for using LLMs with this package:
 
 - Install and run [Ollama](https://ollama.com)
-    - For the corresponding setup see ["WWW::Ollama"](https://github.com/antononcube/Raku-WWW-Ollama)
+  - For the corresponding setup see ["WWW::Ollama"](https://github.com/antononcube/Raku-WWW-Ollama)
 - Run a [llamafile / LLaMA model](https://github.com/mozilla-ai/llamafile)
-    - For the corresponding setup see ["WWW::LLaMA"](https://github.com/antononcube/Raku-WWW-LLaMA)
+  - For the corresponding setup see ["WWW::LLaMA"](https://github.com/antononcube/Raku-WWW-LLaMA)
 - Have programmatic access to LLMs of service providers like [OpenAI](https://developers.openai.com/api/docs/models) or [Gemini](https://ai.google.dev/gemini-api/docs/models)
-    - For the corresponding setup see ["WWWW::OpenAI"](https://github.com/antononcube/Raku-WWW-OpenAI), ["WWWW::Gemini"](https://github.com/antononcube/Raku-WWW-Gemini), or ["WWW::MistralAI"](https://github.com/antononcube/Raku-WWW-MistralAI)
+  - For the corresponding setup see ["WWWW::OpenAI"](https://github.com/antononcube/Raku-WWW-OpenAI), ["WWWW::Gemini"](https://github.com/antononcube/Raku-WWW-Gemini), or ["WWW::MistralAI"](https://github.com/antononcube/Raku-WWW-MistralAI) 
 
 ----
 
@@ -109,10 +109,10 @@ $gBestCode.nodes<code><result>
 ```
 ```
 # ML::SparseMatrixRecommender.new
-# .load-dataset(dsData)
+# .use-dataset(@dsData)
 # .make-term-document-matrix()
-# .apply-term-weight-functions(global-weight-function => 'IDF', local-weight-function => 'None', normalizer-function => 'Cosine')
-# .recommend-by-profile({'passengerSex': 'male', 'passengerClass': '1st'})
+# .apply-term-weight-functions('IDF', 'None', 'Cosine')
+# .recommend-by-profile({'passengerSex'=> 'male', 'passengerClass'=> '1st'})
 # .join-across(@dsData, on => "id")
 # .echo-value()
 ```
@@ -120,6 +120,8 @@ $gBestCode.nodes<code><result>
 -----
 
 ## References
+
+### Articles, blog posts
 
 [AA1] Anton Antonov,
 ["Agentic-AI for text summarization"](https://rakuforprediction.wordpress.com/2025/09/02/agentic-ai-for-text-summarization/),
@@ -133,4 +135,56 @@ $gBestCode.nodes<code><result>
 [Raku Advent Calendar at WordPress](https://raku-advent.blog).
 ([GitHub](https://github.com/antononcube/RakuForPrediction-blog/blob/main/Articles/Robust-code-generation-combining-grammars-and-LLMs.md), 
 [Wolfram Community](https://community.wolfram.com/groups/-/m/t/3588794).)
+
+### Packages
+
+[AAp1] Anton Antonov
+[LLM::Functions, Raku package](https://github.com/antononcube/Raku-LLM-Functions),
+(2023-2026),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAp2] Anton Antonov
+[LLM::Prompts, Raku package](https://github.com/antononcube/Raku-LLM-Prompts),
+(2023-2025),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAp3] Anton Antonov
+[DSL::Examples, Raku package](https://github.com/antononcube/Raku-DSL-Examples),
+(2024-2025),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAp4] Anton Antonov
+[DSL::Translators, Raku package](https://github.com/antononcube/Raku-DSL-Translators),
+(2020-2026),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAp5] Anton Antonov
+[ML::NLPTemplateEngine, Raku package](https://github.com/antononcube/Raku-ML-NLPTemplateEngine),
+(2023-2025),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAp6] Anton Antonov
+[WWW::OpenAI, Raku package](https://github.com/antononcube/Raku-WWW-OpenAI),
+(2023-2026),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAp7] Anton Antonov
+[WWW::Gemini, Raku package](https://github.com/antononcube/Raku-WWW-Gemini),
+(2023-2025),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAp8] Anton Antonov
+[WWW::MistralAI, Raku package](https://github.com/antononcube/Raku-WWW-MistralAI),
+(2023-2024),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAp9] Anton Antonov
+[WWW::LLaMA, Raku package](https://github.com/antononcube/Raku-WWW-LLaMA),
+(2024-2025),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAp10] Anton Antonov
+[WWW::Ollama, Raku package](https://github.com/antononcube/Raku-WWW-Ollama),
+(2026),
+[GitHub/antononcube](https://github.com/antononcube).
 

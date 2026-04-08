@@ -98,6 +98,8 @@ $gBestCode.nodes<code><result>
 
 ## References
 
+### Articles, blog posts
+
 [AA1] Anton Antonov,
 ["Agentic-AI for text summarization"](https://rakuforprediction.wordpress.com/2025/09/02/agentic-ai-for-text-summarization/),
 (2025),
@@ -110,4 +112,56 @@ $gBestCode.nodes<code><result>
 [Raku Advent Calendar at WordPress](https://raku-advent.blog).
 ([GitHub](https://github.com/antononcube/RakuForPrediction-blog/blob/main/Articles/Robust-code-generation-combining-grammars-and-LLMs.md), 
 [Wolfram Community](https://community.wolfram.com/groups/-/m/t/3588794).)
+
+### Packages
+
+[AAp1] Anton Antonov
+[LLM::Functions, Raku package](https://github.com/antononcube/Raku-LLM-Functions),
+(2023-2026),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAp2] Anton Antonov
+[LLM::Prompts, Raku package](https://github.com/antononcube/Raku-LLM-Prompts),
+(2023-2025),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAp3] Anton Antonov
+[DSL::Examples, Raku package](https://github.com/antononcube/Raku-DSL-Examples),
+(2024-2025),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAp4] Anton Antonov
+[DSL::Translators, Raku package](https://github.com/antononcube/Raku-DSL-Translators),
+(2020-2026),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAp5] Anton Antonov
+[ML::NLPTemplateEngine, Raku package](https://github.com/antononcube/Raku-ML-NLPTemplateEngine),
+(2023-2025),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAp6] Anton Antonov
+[WWW::OpenAI, Raku package](https://github.com/antononcube/Raku-WWW-OpenAI),
+(2023-2026),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAp7] Anton Antonov
+[WWW::Gemini, Raku package](https://github.com/antononcube/Raku-WWW-Gemini),
+(2023-2025),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAp8] Anton Antonov
+[WWW::MistralAI, Raku package](https://github.com/antononcube/Raku-WWW-MistralAI),
+(2023-2024),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAp9] Anton Antonov
+[WWW::LLaMA, Raku package](https://github.com/antononcube/Raku-WWW-LLaMA),
+(2024-2025),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAp10] Anton Antonov
+[WWW::Ollama, Raku package](https://github.com/antononcube/Raku-WWW-Ollama),
+(2026),
+[GitHub/antononcube](https://github.com/antononcube).
 
