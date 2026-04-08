@@ -1,7 +1,7 @@
 {
     "name": "LLM::Resources",
     "description": "Different subs and CLI scripts for specific but repeatable LLM-based workflows.",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "authors": [
         "Anton Antonov"
     ],
