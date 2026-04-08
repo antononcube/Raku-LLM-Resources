@@ -20,10 +20,11 @@ There are several options for using LLMs with this package:
 
 ## Installation
 
-### Preliminary installations
+### Preliminary installations (optional)
 
-The code generation LLM-graphs use the package ["DSL::Translators"](https://github.com/antononcube/Raku-DSL-Translators)
-which is not in the Zef ecosystem. Install it with [this script](https://github.com/antononcube/RakuForPrediction-book/blob/main/scripts/raku-dsl-install.sh).
+The code generation LLM-graphs use the package ["DSL::Translators"](https://raku.land/zef:antononcube/DSL::Translators)
+which is somewhat "heavy" to install because of its multiple dependencies. 
+A faster installation -- without testing -- can be done with [this script](https://github.com/antononcube/RakuForPrediction-book/blob/main/scripts/raku-dsl-install.sh).
 
 Here is an example of such installation: 
 
@@ -37,6 +38,8 @@ To check successful installation use the following command in a terminal:
 ```
 dsl-translation 'use dfTitanic; filter by sex is male; show counts'
 ```
+
+(Meaningful code should be obtained.)
 
 ### The package installation
 
