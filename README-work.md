@@ -7,6 +7,15 @@ For usage examples see:
 - Jupyter notebook ["Basic-usage.ipynb"](https://github.com/antononcube/Raku-LLM-Resources/blob/main/docs/Basic-usage.ipynb)
 - The script ["Basic-usage.raku"](https://github.com/antononcube/Raku-LLM-Resources/blob/main/examples/Basic-usage.raku)
 
+There are several options for using LLMs with this package:
+
+- Install and run [Ollama](https://ollama.com)
+  - For the corresponding setup see ["WWW::Ollama"](https://github.com/antononcube/Raku-WWW-Ollama)
+- Run a [llamafile / LLaMA model](https://github.com/mozilla-ai/llamafile)
+  - For the corresponding setup see ["WWW::LLaMA"](https://github.com/antononcube/Raku-WWW-LLaMA)
+- Have programmatic access to LLMs of service providers like [OpenAI](https://developers.openai.com/api/docs/models) or [Gemini](https://ai.google.dev/gemini-api/docs/models)
+  - For the corresponding setup see ["WWWW::OpenAI"](https://github.com/antononcube/Raku-WWW-OpenAI), ["WWWW::Gemini"](https://github.com/antononcube/Raku-WWW-Gemini), or ["WWW::MistralAI"](https://github.com/antononcube/Raku-WWW-MistralAI) 
+
 ----
 
 ## Installation
