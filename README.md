@@ -30,10 +30,10 @@ There are several options for using LLMs with this package:
 ### Preliminary installations (optional)
 
 The code generation LLM-graphs use the package ["DSL::Translators"](https://raku.land/zef:antononcube/DSL::Translators)
-which is somewhat "heavy" to install because of its multiple dependencies.
+which is somewhat "heavy" to install because of its multiple dependencies. 
 A faster installation -- without testing -- can be done with [this script](https://github.com/antononcube/RakuForPrediction-book/blob/main/scripts/raku-dsl-install.sh).
 
-Here is an example of such installation:
+Here is an example of such installation: 
 
 ```
 curl -O https://raw.githubusercontent.com/antononcube/RakuForPrediction-book/refs/heads/main/scripts/raku-dsl-install.sh
@@ -73,7 +73,7 @@ llm-text-summarization --help
 ```
 ```
 # Usage:
-#   llm-text-summarization <input> [--title|--with-title=<Str>] [--conf|--llm|--llm-conf[=Any]] [--async] [--progress] [-o|--output=<Str>] -- LLM-based comprehensive text summarization.
+#   llm-text-summarization.raku <input> [--title|--with-title=<Str>] [--conf|--llm|--llm-conf[=Any]] [--async] [--progress] [-o|--output=<Str>] -- LLM-based comprehensive text summarization.
 #   
 #     <input>                          Text, file path, or a URL.
 #     --title|--with-title=<Str>       Title of the result document; if 'Whatever' or 'Auto' then it is derived from the text. [default: 'Whatever']
@@ -87,6 +87,35 @@ Here is an example usage:
 
 ```
 llm-text-summarization some-large-text.txt -o summary.md --conf=ollama::gpt-oss:20b
+```
+
+---
+
+## Agent skill validation
+
+The package includes a CLI tool that checks whether a directory is a valid agent skill under the [agentskills.io](https://agentskills.io) conventions.
+Here is the usage message of CLI script `agent-skill-validation`:
+
+```shell
+agent-skill-validation --help
+```
+```
+# Usage:
+#   agent-skill-validation.raku <skill-dir> [--boolean|--bool] -- Verify is a given directory a valid agent skill.
+#   
+#     <skill-dir>         Agent skill directory
+#     --boolean|--bool    Whether to give a Boolean results or not. [default: False]
+```
+
+Here is an example usage:
+
+```shell
+agent-skill-validation .
+```
+```
+[
+  "Missing required file: SKILL.md"
+]
 ```
 
 ---
@@ -122,8 +151,8 @@ $gBestCode.nodes<code><result>
 # .use-dataset(@dsData)
 # .make-term-document-matrix()
 # .apply-term-weight-functions('IDF', 'None', 'Cosine')
-# .recommend-by-profile({'passengerSex'=> 'male', 'passengerClass'=> '1st'})
-# .join-across(@dsData, on => "id")
+# .recommend-by-profile(['passengerSex'=> 'male', 'passengerClass'=> '1st'])
+# .join-across(dsData, on => "id")
 # .echo-value()
 ```
 

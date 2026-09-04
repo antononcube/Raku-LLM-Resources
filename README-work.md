@@ -80,6 +80,22 @@ llm-text-summarization some-large-text.txt -o summary.md --conf=ollama::gpt-oss:
 
 ---
 
+## Agent skill validation
+
+The package includes a CLI tool that checks whether a directory is a valid agent skill under the [agentskills.io](https://agentskills.io) conventions.
+Here is the usage message of CLI script `agent-skill-validation`:
+
+```shell
+agent-skill-validation --help
+```
+
+Here is an example usage:
+
+```shell
+agent-skill-validation .
+```
+---
+
 ### Code generation
 
 ```raku
