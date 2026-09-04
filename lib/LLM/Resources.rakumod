@@ -110,10 +110,10 @@ multi sub llm-resource-graph(
 }
 
 #==========================================================
-# LLM resource graph
+# Agent skill validation
 #==========================================================
 
-#| Verify is a given director a valid agent skill.
+#| Verify is a given directory a valid agent skill.
 sub is-valid-agent-skill($dir) is export {
     return LLM::Resources::AgentSkillValidator.new.is-valid($dir);
 }
