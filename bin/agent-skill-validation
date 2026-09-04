@@ -1,0 +1,20 @@
+#!/usr/bin/env raku
+use v6.d;
+
+use LLM::Resources::AgentSkillValidator;
+use JSON::Fast;
+
+my %*SUB-MAIN-OPTS = :named-anywhere;
+
+#| Verify is a given directory a valid agent skill.
+sub MAIN(
+        Str:D $skill-dir,                #= Agent skill directory
+        Bool:D :boolean(:$bool) = False, #= Whether to give a Boolean results or not.
+         ) {
+    if $bool {
+       say LLM::Resources::AgentSkillValidator.new.is-valid($skill-dir);
+    } else {
+       my $res = LLM::Resources::AgentSkillValidator.new.validate($skill-dir);
+       say to-json($res) unless $res ~~ Positional:D && $res.elems == 0
+    }
+}
