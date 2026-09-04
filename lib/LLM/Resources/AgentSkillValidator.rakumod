@@ -35,7 +35,16 @@ class LLM::Resources::AgentSkillValidator {
     }
 
     #| Return True when the supplied directory is a valid Agent Skill.
-    method is-valid(IO::Path:D $skill-dir --> Bool:D) {
+    proto method is-valid(IO::Path:D $skill-dir --> Bool:D) {*}
+
+    multi method is-valid(Str:D $skill-dir --> Bool:D) {
+        if $skill-dir.IO.d {
+            return self.is-valid($skill-dir.IO)
+        }
+        die 'The first argument is expected to be valid directory.'
+    }
+
+    multi method is-valid(IO::Path:D $skill-dir --> Bool:D) {
         self.validate($skill-dir).elems == 0
     }
 
