@@ -13,6 +13,7 @@ sub EXPORT {
 unit module LLM::Resources;
 
 use LLM::Resources::Graphs;
+use LLM::Resources::AgentSkillValidator;
 use LLM::Graph;
 use LLM::Functions;
 use LLM::Prompts;
@@ -106,4 +107,13 @@ multi sub llm-resource-graph(
 
     # Maybe just result nodes? Or take return type argument.
     return $llm-graph;
+}
+
+#==========================================================
+# LLM resource graph
+#==========================================================
+
+#| Verify is a given director a valid agent skill.
+sub is-valid-agent-skill($dir) is export {
+    return LLM::Resources::AgentSkillValidator.new.is-valid($dir);
 }

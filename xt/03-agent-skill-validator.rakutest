@@ -1,0 +1,26 @@
+#!/usr/bin/env raku
+use v6.d;
+use Test;
+use LLM::Resources;
+use LLM::Resources::AgentSkillValidator;
+
+plan *;
+
+subtest {
+    is
+            LLM::Resources::AgentSkillValidator.new.is-valid($*HOME.add(<.codex skills raku-llm-graph-making>)),
+            True,
+            'Codex skill is valid';
+}, 'validate Codex skill with class.';
+
+subtest {
+
+    ok is-valid-agent-skill($*HOME.add(<.codex skills raku-llm-graph-making>));
+
+    is
+        is-valid-agent-skill($*HOME.add(<.codex skills raku-llm-graph-making>)),
+        True;
+
+}, 'top level skill validator';
+
+done-testing;
