@@ -1,5 +1,7 @@
 use v6.d;
 
+use JSON::Fast;
+
 #| Validate directories which implement the Agent Skills specification.
 #|
 #| The validator follows the reference implementation at
@@ -124,20 +126,23 @@ class LLM::Resources::AgentSkillValidator {
                     "character limit ({$name.chars} chars)"
             );
         }
-        @errors.push("Skill name '$name' must be lowercase") if $name ne $name.lc;
-        @errors.push('Skill name cannot start or end with a hyphen')
-                if $name.starts-with('-') || $name.ends-with('-');
-        @errors.push('Skill name cannot contain consecutive hyphens')
-                if $name.contains('--');
 
-        if $name.comb.first({ $_ ne '-' && $_ !~~ /^ <:L+:N>+ $/ }).defined {
+        @errors.push("Skill name '$name' must be lowercase") if $name ne $name.lc;
+
+        @errors.push('Skill name cannot start or end with a hyphen')
+        if $name.starts-with('-') || $name.ends-with('-');
+
+        @errors.push('Skill name cannot contain consecutive hyphens')
+        if $name.contains('--');
+
+        with $name.comb.first({ $_ ne '-' && $_ !~~ /^ <:L+:N>+ $/ }) {
             @errors.push(
                     "Skill name '$name' contains invalid characters. " ~
                     'Only letters, digits, and hyphens are allowed.'
             );
         }
 
-        if $skill-dir.defined {
+        with $skill-dir {
             my $directory-name = $skill-dir.IO.basename;
             if $directory-name ne $name {
                 @errors.push(
@@ -208,12 +213,10 @@ class LLM::Resources::AgentSkillValidator {
         my $text = $content.subst("\r\n", "\n", :g).subst("\r", "\n", :g);
         my @lines = $text.split("\n", :skip-empty(False));
 
-        return self!parse-error('SKILL.md must start with YAML frontmatter (---)')
-                unless @lines.elems && @lines[0] eq '---';
+        return self!parse-error('SKILL.md must start with YAML frontmatter (---)') unless @lines.elems && @lines[0] ~~ / ^ '-' ** 3..* \h* /;
 
-        my $close = (1 ..^ @lines.elems).first({ @lines[$_] eq '---' });
-        return self!parse-error('SKILL.md frontmatter not properly closed with ---')
-                unless $close.defined;
+        my $close = (1 ..^ @lines.elems).first({ @lines[$_] ~~ / ^ '-' ** 3..* \h* / });
+        return self!parse-error('SKILL.md frontmatter not properly closed with ---') unless $close.defined;
 
         my @yaml = @lines[1 ..^ $close];
         my $body = @lines[$close + 1 .. *].join("\n").trim;
@@ -325,18 +328,15 @@ class LLM::Resources::AgentSkillValidator {
             }
             my $value;
             my $error;
-            try {
-                require JSON::Fast;
-                $value = ::('JSON::Fast')::<&from-json>($raw);
-                CATCH { default { $error = .message } }
-            }
-            if $error.defined {
+            $value = from-json($raw);
+
+            with $error {
                 return {
                     value => Any,
                     errors => ["Invalid YAML in frontmatter: invalid quoted value (line $line)"]
                 };
             }
-            return { :$value, errors => [] };
+            return { :$value, errors => [] }
         }
 
         # Strip a YAML comment only when its # is preceded by whitespace.
@@ -346,7 +346,7 @@ class LLM::Resources::AgentSkillValidator {
             return {
                 value => Any,
                 errors => ["Invalid YAML in frontmatter: expected a scalar value (line $line)"]
-            };
+            }
         }
         return { value => $raw, errors => [] }
     }
