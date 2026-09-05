@@ -32,8 +32,6 @@ subtest {
 
     ok $validator.parse-frontmatter(@skill-dirs.head), 'parsing skill frontmatter is ok';
 
-    say ($validator.parse-frontmatter(@skill-dirs.head)<metadata>);
-
     is
             @skill-dirs.map({ say $_.raku; $validator.parse-frontmatter($_) }).all ~~ Map:D,
             True,
@@ -41,13 +39,8 @@ subtest {
 
     is
             $validator.parse-frontmatter(@skill-dirs.head).keys.sort,
-            <body errors metadata>.sort,
-            'expected frontmatter keys';
-
-    is
-            $validator.parse-frontmatter(@skill-dirs.head)<metadata>.keys.sort,
             <name description>.sort,
-            'expected metadata keys';
+            'expected frontmatter keys';
 
 }, 'just skill headers';
 
