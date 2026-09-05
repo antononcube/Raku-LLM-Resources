@@ -201,7 +201,7 @@ class LLM::Resources::AgentSkillValidator {
                 default {
                     return {
                         metadata => {}, body => '',
-                        errors => ["Cannot read $skill-md: {$_.message}"]
+                        errors => ["Cannot read $skill-md: {$_.message}",]
                     };
                 }
             }
@@ -314,7 +314,7 @@ class LLM::Resources::AgentSkillValidator {
             unless $raw.chars >= 2 && $raw.ends-with("'") {
                 return {
                     value => Any,
-                    errors => ["Invalid YAML in frontmatter: unterminated quoted value (line $line)"]
+                    errors => ["Invalid YAML in frontmatter: unterminated quoted value (line $line)",]
                 };
             }
             return { value => $raw.substr(1, $raw.chars - 2).subst("''", "'", :g), errors => [] };
@@ -323,7 +323,7 @@ class LLM::Resources::AgentSkillValidator {
             unless $raw.chars >= 2 && $raw.ends-with('"') {
                 return {
                     value => Any,
-                    errors => ["Invalid YAML in frontmatter: unterminated quoted value (line $line)"]
+                    errors => ["Invalid YAML in frontmatter: unterminated quoted value (line $line)",]
                 };
             }
             my $value;
@@ -333,7 +333,7 @@ class LLM::Resources::AgentSkillValidator {
             with $error {
                 return {
                     value => Any,
-                    errors => ["Invalid YAML in frontmatter: invalid quoted value (line $line)"]
+                    errors => ["Invalid YAML in frontmatter: invalid quoted value (line $line)",]
                 };
             }
             return { :$value, errors => [] }
@@ -345,14 +345,14 @@ class LLM::Resources::AgentSkillValidator {
         if $raw.starts-with('[') || $raw.starts-with('{') || $raw.starts-with('- ') {
             return {
                 value => Any,
-                errors => ["Invalid YAML in frontmatter: expected a scalar value (line $line)"]
+                errors => ["Invalid YAML in frontmatter: expected a scalar value (line $line)",]
             }
         }
         return { value => $raw, errors => [] }
     }
 
     method !parse-error(Str:D $message --> Hash:D) {
-        return { metadata => {}, body => '', errors => [$message] }
+        return { metadata => {}, body => '', errors => [$message,] }
     }
 
 }
