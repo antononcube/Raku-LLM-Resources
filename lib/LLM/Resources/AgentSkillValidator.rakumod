@@ -156,8 +156,9 @@ class LLM::Resources::AgentSkillValidator {
 
     #| Validate the required skill description.
     method validate-description(Mu $description --> Array:D) {
-        return [q[Field 'description' must be a non-empty string]]
-                unless $description ~~ Str:D && $description.trim.chars;
+        return ["Field 'description' must be a non-empty string",]
+        unless $description ~~ Str:D && $description.trim.chars;
+	
         return [
             "Description exceeds {MAX-DESCRIPTION-LENGTH} character limit " ~
             "({$description.chars} chars)"
@@ -167,8 +168,9 @@ class LLM::Resources::AgentSkillValidator {
 
     #| Validate the optional compatibility declaration.
     method validate-compatibility(Mu $compatibility --> Array:D) {
-        return [q[Field 'compatibility' must be a string]]
-                unless $compatibility ~~ Str:D;
+        return ["Field 'compatibility' must be a string",]
+        unless $compatibility ~~ Str:D;
+	
         return [
             "Compatibility exceeds {MAX-COMPATIBILITY-LENGTH} character limit " ~
             "({$compatibility.chars} chars)"
@@ -188,7 +190,15 @@ class LLM::Resources::AgentSkillValidator {
 
     #| Parse SKILL.md-style YAML frontmatter without reading a directory.
     #| The returned Hash has `metadata`, `body`, and `errors` entries.
-    method parse-frontmatter(Str:D $content --> Hash:D) {
+    proto method parse-frontmatter(Str:D $content --> Hash:D) {*}
+
+    multi method parse-frontmatter(IO::Path:D $dir --> Hash:D) {
+        my $file = self.find-skill-md($dir);
+        return self.parse-frontmatter($file.slurp) with $file;
+        Nil
+    }
+
+    multi method parse-frontmatter(Str:D $content --> Hash:D) {
         self!parse-frontmatter($content)
     }
 
