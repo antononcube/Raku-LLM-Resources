@@ -30,7 +30,7 @@ class LLM::Resources::AgentSkillValidator {
         my @errors = self.validate-structure($dir);
         return @errors if @errors;
 
-        my %parsed = self!parse-skill-file($dir);
+        my %parsed = self.parse-skill-file($dir);
         return %parsed<errors>.Array if %parsed<errors>.elems;
 
         self.validate-content(%parsed<metadata>, :skill-dir($dir));
@@ -63,7 +63,7 @@ class LLM::Resources::AgentSkillValidator {
     method validate-format(IO::Path:D $skill-dir --> Array:D) {
         my @errors = self.validate-structure($skill-dir);
         return @errors if @errors;
-        return self!parse-skill-file($skill-dir.IO)<errors>.Array
+        return self.parse-skill-file($skill-dir.IO)<errors>.Array
     }
 
     #| Validate already parsed frontmatter metadata.
@@ -188,8 +188,6 @@ class LLM::Resources::AgentSkillValidator {
         Nil
     }
 
-    #| Parse SKILL.md-style YAML frontmatter without reading a directory.
-    #| The returned Hash has `metadata`, `body`, and `errors` entries.
     proto method parse-frontmatter(Str:D $content --> Hash:D) {*}
 
     multi method parse-frontmatter(IO::Path:D $dir --> Hash:D) {
@@ -199,10 +197,13 @@ class LLM::Resources::AgentSkillValidator {
     }
 
     multi method parse-frontmatter(Str:D $content --> Hash:D) {
-        self!parse-frontmatter($content)
+        self!parse-content($content)<metadata>
     }
 
-    method !parse-skill-file(IO::Path:D $skill-dir --> Hash:D) {
+
+    #| Parse SKILL.md-style YAML frontmatter without reading a directory.
+    #| The returned Hash has `metadata`, `body`, and `errors` entries.
+    method parse-skill-file(IO::Path:D $skill-dir --> Hash:D) {
         my $skill-md = self.find-skill-md($skill-dir);
         my $content;
         try {
@@ -216,10 +217,10 @@ class LLM::Resources::AgentSkillValidator {
                 }
             }
         }
-        self!parse-frontmatter($content)
+        self!parse-content($content)
     }
 
-    method !parse-frontmatter(Str:D $content --> Hash:D) {
+    method !parse-content(Str:D $content --> Hash:D) {
         my $text = $content.subst("\r\n", "\n", :g).subst("\r", "\n", :g);
         my @lines = $text.split("\n", :skip-empty(False));
 
