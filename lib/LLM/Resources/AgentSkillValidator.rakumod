@@ -188,6 +188,8 @@ class LLM::Resources::AgentSkillValidator {
         Nil
     }
 
+    #| Parse the metadata of the skill file YAML header.
+    #| The returned Hash has 'name' nad 'description' entries.
     proto method parse-frontmatter(Str:D $content --> Hash:D) {*}
 
     multi method parse-frontmatter(IO::Path:D $dir --> Hash:D) {
@@ -200,9 +202,8 @@ class LLM::Resources::AgentSkillValidator {
         self!parse-content($content)<metadata>
     }
 
-
-    #| Parse SKILL.md-style YAML frontmatter without reading a directory.
-    #| The returned Hash has `metadata`, `body`, and `errors` entries.
+    #| Parse SKILL.md file.
+    #| The returned Hash has 'metadata', 'body', and 'errors' entries.
     method parse-skill-file(IO::Path:D $skill-dir --> Hash:D) {
         my $skill-md = self.find-skill-md($skill-dir);
         my $content;
