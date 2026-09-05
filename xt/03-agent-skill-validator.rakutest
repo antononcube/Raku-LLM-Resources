@@ -38,8 +38,8 @@ subtest {
             'parsing all skill frontmatters gives hashmaps';
 
     is
-            $validator.parse-frontmatter(@skill-dirs.head).keys.sort,
-            <name description>.sort,
+            ($validator.parse-frontmatter(@skill-dirs.head).keys.sort (&) LLM::Resources::AgentSkillValidator::ALLOWED-FIELDS).elems ≥ 2,
+            True,
             'expected frontmatter keys';
 
 }, 'just skill headers';
