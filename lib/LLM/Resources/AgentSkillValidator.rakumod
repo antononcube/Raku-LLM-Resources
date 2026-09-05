@@ -112,8 +112,8 @@ class LLM::Resources::AgentSkillValidator {
 
     #| Validate a skill name and, optionally, its containing directory name.
     method validate-name(Mu $value, IO::Path:D :$skill-dir --> Array:D) {
-        return [q[Field 'name' must be a non-empty string]]
-                unless $value ~~ Str:D && $value.trim.chars;
+        return ["Field 'name' must be a non-empty string",]
+        unless $value ~~ Str:D && $value.trim.chars;
 
         # Raku strings use Normalization Form Grapheme internally, so
         # canonically equivalent spellings compare equal.
