@@ -23,4 +23,32 @@ subtest {
 
 }, 'top level skill validator';
 
+subtest {
+    my @skill-dirs = $*HOME.add(<.codex skills>).dir.grep({ $_.d  && $_.basename.starts-with('raku-') });
+
+    is @skill-dirs.elems > 0, True, 'there are skills';
+
+    my $validator = LLM::Resources::AgentSkillValidator.new;
+
+    ok $validator.parse-frontmatter(@skill-dirs.head), 'parsing skill frontmatter is ok';
+
+    say ($validator.parse-frontmatter(@skill-dirs.head)<metadata>);
+
+    is
+            @skill-dirs.map({ say $_.raku; $validator.parse-frontmatter($_) }).all ~~ Map:D,
+            True,
+            'parsing all skill frontmatters gives hashmaps';
+
+    is
+            $validator.parse-frontmatter(@skill-dirs.head).keys.sort,
+            <body errors metadata>.sort,
+            'expected frontmatter keys';
+
+    is
+            $validator.parse-frontmatter(@skill-dirs.head)<metadata>.keys.sort,
+            <name description>.sort,
+            'expected metadata keys';
+
+}, 'just skill headers';
+
 done-testing;
