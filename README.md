@@ -73,7 +73,7 @@ llm-text-summarization --help
 ```
 ```
 # Usage:
-#   llm-text-summarization.raku <input> [--title|--with-title=<Str>] [--conf|--llm|--llm-conf[=Any]] [--async] [--progress] [-o|--output=<Str>] -- LLM-based comprehensive text summarization.
+#   llm-text-summarization <input> [--title|--with-title=<Str>] [--conf|--llm|--llm-conf[=Any]] [--async] [--progress] [-o|--output=<Str>] -- LLM-based comprehensive text summarization.
 #   
 #     <input>                          Text, file path, or a URL.
 #     --title|--with-title=<Str>       Title of the result document; if 'Whatever' or 'Auto' then it is derived from the text. [default: 'Whatever']
@@ -101,7 +101,7 @@ agent-skill-validation --help
 ```
 ```
 # Usage:
-#   agent-skill-validation.raku <skill-dir> [--boolean|--bool] -- Verify is a given directory a valid agent skill.
+#   agent-skill-validation <skill-dir> [--boolean|--bool] -- Verify is a given directory a valid agent skill.
 #   
 #     <skill-dir>         Agent skill directory
 #     --boolean|--bool    Whether to give a Boolean results or not. [default: False]
